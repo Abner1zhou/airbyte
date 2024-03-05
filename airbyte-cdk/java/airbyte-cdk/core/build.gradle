@@ -23,9 +23,9 @@ dependencies {
     api 'org.jooq:jooq:3.16.23'
     api 'org.apache.commons:commons-csv:1.10.0'
     api libs.micronaut.inject.java
-    api "io.micronaut:micronaut-runtime:${libs.versions.micronaut}"
+    api "io.micronaut:micronaut-runtime:${libs.versions.micronaut.platform.get()}"
     api 'io.micronaut.picocli:micronaut-picocli:5.2.0'
-    api "info.picocli:picocli:${libs.versions.picocli}"
+    api "info.picocli:picocli:${libs.versions.picocli.get()}"
     api 'io.github.oshai:kotlin-logging-jvm:5.1.0'
 
     implementation project(':airbyte-cdk:java:airbyte-cdk:dependencies')
@@ -57,4 +57,5 @@ dependencies {
     testImplementation 'org.testcontainers:mysql:1.19.0'
     testImplementation 'org.testcontainers:postgresql:1.19.0'
     testImplementation 'org.xbib.elasticsearch:joptsimple:6.3.2.1'
+    testImplementation libs.mockk
 }
