@@ -13,7 +13,7 @@ import java.util.function.Consumer
 
 /**
  * POJO abstraction representing one discrete buffer read. This allows ergonomics dequeues by
- * [io.airbyte.cdk.integrations.destination_async.FlushWorkers].
+ * [io.airbyte.cdk.integrations.destination.async.FlushWorkers].
  *
  *
  * The contained stream **IS EXPECTED to be a BOUNDED** stream. Returning a boundless stream has

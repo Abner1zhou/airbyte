@@ -154,7 +154,7 @@ class GlobalAsyncStateManager(private val memoryManager: GlobalMemoryManager) {
 
     /**
      * Flushes state messages with no more inflight records i.e. counter = 0 across all streams.
-     * Intended to be called by [io.airbyte.cdk.integrations.destination_async.FlushWorkers] after
+     * Intended to be called by [io.airbyte.cdk.integrations.destination.async.FlushWorkers] after
      * a worker has finished flushing its record batch.
      *
      *
@@ -445,7 +445,7 @@ class GlobalAsyncStateManager(private val memoryManager: GlobalMemoryManager) {
          * the connector, the platform sets the namespace as null in the StreamDescriptor in the
          * AirbyteMessages (both record and state messages). The destination checks that if the namespace is
          * empty or null, if yes then re-populates it with the defaultNamespace. See
-         * [io.airbyte.cdk.integrations.destination_async.AsyncStreamConsumer.accept]
+         * [io.airbyte.cdk.integrations.destination.async.AsyncStreamConsumer.accept]
          * But destination only does this for the record messages. So when state messages arrive without a
          * namespace and since the destination doesn't repopulate it with the default namespace, there is a
          * mismatch between the StreamDescriptor from record messages and state messages. That breaks the

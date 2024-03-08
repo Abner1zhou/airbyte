@@ -6,6 +6,7 @@ package io.airbyte.cdk.integrations.destination.async
 
 import com.google.common.annotations.VisibleForTesting
 import io.airbyte.cdk.integrations.destination.async.buffers.BufferDequeue
+import io.airbyte.cdk.integrations.destination.async.function.DestinationFlushFunction
 import io.airbyte.protocol.models.v0.StreamDescriptor
 import io.github.oshai.kotlinlogging.KotlinLogging
 import org.apache.commons.lang3.tuple.ImmutablePair

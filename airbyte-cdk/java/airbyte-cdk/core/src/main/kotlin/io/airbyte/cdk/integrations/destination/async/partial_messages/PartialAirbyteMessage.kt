@@ -33,7 +33,7 @@ class PartialAirbyteMessage {
      *
      *
      * See
-     * [io.airbyte.cdk.integrations.destination_async.AsyncStreamConsumer.deserializeAirbyteMessage]
+     * [io.airbyte.cdk.integrations.destination.async.AsyncStreamConsumer.deserializeAirbyteMessage]
      * for the exact logic of how this field is populated.
      */
     @get:JsonProperty("serialized")

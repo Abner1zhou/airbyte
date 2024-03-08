@@ -11,8 +11,10 @@ import io.airbyte.cdk.integrations.base.SerializedAirbyteMessageConsumer
 import io.airbyte.cdk.integrations.destination.StreamSyncSummary
 import io.airbyte.cdk.integrations.destination.async.buffers.BufferEnqueue
 import io.airbyte.cdk.integrations.destination.async.buffers.BufferManager
+import io.airbyte.cdk.integrations.destination.async.function.DestinationFlushFunction
 import io.airbyte.cdk.integrations.destination.async.partial_messages.PartialAirbyteMessage
 import io.airbyte.cdk.integrations.destination.async.state.FlushFailure
+import io.airbyte.cdk.integrations.destination.buffered_stream_consumer.OnCloseFunction
 import io.airbyte.cdk.integrations.destination.buffered_stream_consumer.OnStartFunction
 import io.airbyte.commons.json.Jsons
 import io.airbyte.protocol.models.v0.AirbyteMessage
@@ -182,7 +184,7 @@ class AsyncStreamConsumer
             val streamSyncSummaries =
                 streamNames.stream().collect(
                     Collectors.toMap(
-                        { streamDescriptor: StreamDescriptor? -> streamDescriptor },
+                        { streamDescriptor: StreamDescriptor -> streamDescriptor },
                         { streamDescriptor: StreamDescriptor ->
                             StreamSyncSummary(
                                 Optional.of(getRecordCounter(streamDescriptor).get()),

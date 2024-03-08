@@ -5,6 +5,7 @@
 package io.airbyte.cdk.integrations.destination.async
 
 import io.airbyte.cdk.integrations.destination.async.buffers.StreamAwareQueue
+import io.airbyte.cdk.integrations.destination.async.function.DestinationFlushFunction
 import io.airbyte.cdk.integrations.destination.async.state.FlushFailure
 import io.airbyte.cdk.integrations.destination.async.state.GlobalAsyncStateManager
 import io.airbyte.protocol.models.v0.AirbyteMessage
