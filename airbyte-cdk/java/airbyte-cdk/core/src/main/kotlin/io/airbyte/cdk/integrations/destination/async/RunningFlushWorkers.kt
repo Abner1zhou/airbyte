@@ -5,7 +5,10 @@
 package io.airbyte.cdk.integrations.destination.async
 
 import com.google.common.base.Preconditions
+import io.airbyte.cdk.core.context.env.ConnectorConfigurationPropertySource
 import io.airbyte.protocol.models.v0.StreamDescriptor
+import io.micronaut.context.annotation.Requires
+import jakarta.inject.Singleton
 import java.util.Optional
 import java.util.UUID
 import java.util.concurrent.ConcurrentHashMap
@@ -14,9 +17,14 @@ import java.util.concurrent.ConcurrentMap
 /**
  * Track the number of flush workers (and their size) that are currently running for a given stream.
  */
+@Singleton
+@Requires(
+    property = ConnectorConfigurationPropertySource.CONNECTOR_OPERATION,
+    value = "write",
+)
+@Requires(env = ["destination"])
 class RunningFlushWorkers {
-    private val streamToFlushWorkerToBatchSize: ConcurrentMap<StreamDescriptor, ConcurrentMap<UUID, Optional<Long>>> =
-        ConcurrentHashMap()
+    private val streamToFlushWorkerToBatchSize: ConcurrentMap<StreamDescriptor, ConcurrentMap<UUID, Optional<Long>>> = ConcurrentHashMap()
 
     /**
      * Call this when a worker starts flushing a stream.
@@ -28,11 +36,8 @@ class RunningFlushWorkers {
         stream: StreamDescriptor,
         flushWorkerId: UUID,
     ) {
-        streamToFlushWorkerToBatchSize.computeIfAbsent(
-            stream,
-        ) { ConcurrentHashMap() }.computeIfAbsent(
-            flushWorkerId,
-        ) { Optional.empty() }
+        streamToFlushWorkerToBatchSize.computeIfAbsent(stream) { ConcurrentHashMap() }
+            .computeIfAbsent(flushWorkerId) { Optional.empty() }
     }
 
     /**

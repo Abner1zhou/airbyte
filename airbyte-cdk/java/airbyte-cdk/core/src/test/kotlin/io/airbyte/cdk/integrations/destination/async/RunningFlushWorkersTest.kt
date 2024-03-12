@@ -5,7 +5,8 @@
 package io.airbyte.cdk.integrations.destination.async
 
 import io.airbyte.protocol.models.v0.StreamDescriptor
-import org.assertj.core.api.Assertions
+import org.assertj.core.api.Assertions.assertThat
+import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.BeforeEach
@@ -14,12 +15,13 @@ import java.util.Optional
 import java.util.UUID
 
 class RunningFlushWorkersTest {
-    private val SIZE_10MB = (10 * 1024 * 1024).toLong()
-
-    private val FLUSH_WORKER_ID1: UUID = UUID.randomUUID()
-    private val FLUSH_WORKER_ID2: UUID = UUID.randomUUID()
-    private val STREAM1: StreamDescriptor = StreamDescriptor().withNamespace("namespace1").withName("stream1")
-    private val STREAM2: StreamDescriptor = StreamDescriptor().withNamespace("namespace2").withName("stream2")
+    companion object {
+        private const val SIZE_10MB = (10 * 1024 * 1024).toLong()
+        private val FLUSH_WORKER_ID1: UUID = UUID.randomUUID()
+        private val FLUSH_WORKER_ID2: UUID = UUID.randomUUID()
+        private val STREAM1: StreamDescriptor = StreamDescriptor().withNamespace("namespace1").withName("stream1")
+        private val STREAM2: StreamDescriptor = StreamDescriptor().withNamespace("namespace2").withName("stream2")
+    }
 
     private lateinit var runningFlushWorkers: RunningFlushWorkers
 
@@ -30,12 +32,12 @@ class RunningFlushWorkersTest {
 
     @Test
     internal fun testTrackFlushWorker() {
-        Assertions.assertThat(runningFlushWorkers.getSizesOfRunningWorkerBatches(STREAM1).size).isEqualTo(0)
+        assertThat(runningFlushWorkers.getSizesOfRunningWorkerBatches(STREAM1).size).isEqualTo(0)
         runningFlushWorkers.trackFlushWorker(STREAM1, FLUSH_WORKER_ID1)
-        Assertions.assertThat(runningFlushWorkers.getSizesOfRunningWorkerBatches(STREAM1).size).isEqualTo(1)
+        assertThat(runningFlushWorkers.getSizesOfRunningWorkerBatches(STREAM1).size).isEqualTo(1)
         runningFlushWorkers.trackFlushWorker(STREAM1, FLUSH_WORKER_ID2)
         runningFlushWorkers.trackFlushWorker(STREAM2, FLUSH_WORKER_ID1)
-        Assertions.assertThat(runningFlushWorkers.getSizesOfRunningWorkerBatches(STREAM1).size).isEqualTo(2)
+        assertThat(runningFlushWorkers.getSizesOfRunningWorkerBatches(STREAM1).size).isEqualTo(2)
     }
 
     @Test
@@ -43,14 +45,14 @@ class RunningFlushWorkersTest {
         runningFlushWorkers.trackFlushWorker(STREAM1, FLUSH_WORKER_ID1)
         runningFlushWorkers.trackFlushWorker(STREAM1, FLUSH_WORKER_ID2)
         runningFlushWorkers.completeFlushWorker(STREAM1, FLUSH_WORKER_ID1)
-        Assertions.assertThat(runningFlushWorkers.getSizesOfRunningWorkerBatches(STREAM1).size).isEqualTo(1)
+        assertThat(runningFlushWorkers.getSizesOfRunningWorkerBatches(STREAM1).size).isEqualTo(1)
         runningFlushWorkers.completeFlushWorker(STREAM1, FLUSH_WORKER_ID2)
-        Assertions.assertThat(runningFlushWorkers.getSizesOfRunningWorkerBatches(STREAM1).size).isEqualTo(0)
+        assertThat(runningFlushWorkers.getSizesOfRunningWorkerBatches(STREAM1).size).isEqualTo(0)
     }
 
     @Test
     internal fun testCompleteFlushWorkerWithoutTrackThrowsException() {
-        Assertions.assertThatThrownBy {
+        assertThatThrownBy {
             runningFlushWorkers.completeFlushWorker(
                 STREAM1,
                 FLUSH_WORKER_ID1,
@@ -64,8 +66,8 @@ class RunningFlushWorkersTest {
     internal fun testMultipleStreams() {
         runningFlushWorkers.trackFlushWorker(STREAM1, FLUSH_WORKER_ID1)
         runningFlushWorkers.trackFlushWorker(STREAM2, FLUSH_WORKER_ID1)
-        Assertions.assertThat(runningFlushWorkers.getSizesOfRunningWorkerBatches(STREAM1).size).isEqualTo(1)
-        Assertions.assertThat(runningFlushWorkers.getSizesOfRunningWorkerBatches(STREAM2).size).isEqualTo(1)
+        assertThat(runningFlushWorkers.getSizesOfRunningWorkerBatches(STREAM1).size).isEqualTo(1)
+        assertThat(runningFlushWorkers.getSizesOfRunningWorkerBatches(STREAM2).size).isEqualTo(1)
     }
 
     @Test
